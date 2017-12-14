@@ -23,7 +23,30 @@ class Kele
   def get_mentor_availability(mentor_id) #Ben's mentor id == 537104
     response = self.class.get("/mentors/#{mentor_id}/student_availability", headers: { "authorization" => @user_auth_code })
     JSON.parse(response.body)
+  end
 
+
+  def get_messages(page_number=nil) #if no page number is specified, all messages will be returned
+    if page_number == nil
+      response = self.class.get("/message_threads/", headers: { "authorization" => @user_auth_code })
+    else
+      response = self.class.get("/message_threads/#{page_number}", headers: { "authorization" => @user_auth_code })
+    end
+
+    JSON.parse(response.body)
+  end
+
+  def create_message(sender, recipient_id, token, subject, message)
+    response = self.class.post("/messages/", headers: { "authorization" => @user_auth_code },
+    body: {
+      sender: sender,
+      recipient_id: recipient_id,
+      token: token,
+      subject: subject,
+      stripped_text: message
+    })
+
+    JSON.parse(response.body)
   end
 
 end
