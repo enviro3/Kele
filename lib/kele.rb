@@ -30,23 +30,47 @@ class Kele
     if page_number == nil
       response = self.class.get("/message_threads/", headers: { "authorization" => @user_auth_code })
     else
-      response = self.class.get("/message_threads/#{page_number}", headers: { "authorization" => @user_auth_code })
+      response = self.class.get("/message_threads",
+        body: {page: page_number},
+        headers: { "authorization" => @user_auth_code })
     end
 
     JSON.parse(response.body)
   end
 
+
   def create_message(sender, recipient_id, token, subject, message)
     response = self.class.post("/messages/", headers: { "authorization" => @user_auth_code },
-    body: {
-      sender: sender,
-      recipient_id: recipient_id,
-      token: token,
-      subject: subject,
-      stripped_text: message
-    })
+      body: {
+        sender: sender,
+        recipient_id: recipient_id,
+        token: token,
+        subject: subject,
+        "stripped-text": message
+      })
 
-    JSON.parse(response.body)
-  end
+      if response["success"]
+        puts "Message has successfully sent"
+      else
+        puts "Message failed to send"
+      end
 
-end
+      puts response
+
+      JSON.parse(response.body)["success"]
+    end
+
+    # def create_submission(checkpoint_id, assignment_branch, assignment_commit_link, comment)
+    #   response = self.class.post("/messages/", headers: { "authorization" => @user_auth_code },
+    #     body: {
+    #       checkpoint_id: checkpoint_id,
+    #       assignment_branch: recipient_id,
+    #       token: token,
+    #       subject: subject,
+    #       stripped_text: message
+    #     })
+    #
+    #     JSON.parse(response.body)
+    #   end
+
+    end
