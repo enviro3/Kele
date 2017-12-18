@@ -49,15 +49,7 @@ class Kele
         "stripped-text": message
       })
 
-      if response["success"]
-        puts "Message has successfully sent"
-      else
-        puts "Message failed to send"
-      end
-
-      puts response
-
-      JSON.parse(response.body)["success"]
+      JSON.parse(response.body)
     end
 
     def create_submission(assignment_branch, assignment_commit_link, checkpoint_id, comment)
@@ -71,12 +63,6 @@ class Kele
           comment: comment,
           enrollment_id: enrollment_id
         })
-
-        if response["success"]
-          puts "Checkpoint has been successfully submitted"
-        else
-          puts "Checkpoint has failed to send"
-        end
 
         JSON.parse(response.body)
       end
